@@ -22,8 +22,8 @@ public class Series {
      * @return
      */
     public static long factorial(int n) {
-        if (n == 0) {
-            return 0;
+        if (n == 0 || n == 1) {
+            return 1;
         }
 
         long fact = 1;
@@ -32,6 +32,21 @@ public class Series {
         }
 
         return fact;
+    }
+
+    /**
+     * Returns the product of all numbers from 1 to n, using recursion
+     * n! = (n-1) * n
+     *
+     * @param n
+     * @return
+     */
+    public static long factorialRecursiv(int n) {
+        if (n == 0 || n == 1) {
+            return 1;
+        }
+
+        return factorialRecursiv(n - 1) * n;
     }
 
     /**
