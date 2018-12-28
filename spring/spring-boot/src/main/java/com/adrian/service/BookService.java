@@ -1,6 +1,6 @@
 package com.adrian.service;
 
-import com.adrian.dao.SimulatedBookRepository;
+import com.adrian.dao.BookRepositoryInterface;
 import com.adrian.entity.Book;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -13,7 +13,7 @@ public class BookService {
 
     @Autowired
     @Qualifier("simulatedRepository")
-    private SimulatedBookRepository bookRepository;
+    private BookRepositoryInterface bookRepository;
 
     public Collection<Book> getAllBooks() {
         return this.bookRepository.getAllBooks();
