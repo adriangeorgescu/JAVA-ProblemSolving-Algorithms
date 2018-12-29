@@ -1,0 +1,32 @@
+[
+  {
+    "isbn": 1,
+    "title": "In search of Lost Time",
+    "author": "Marcel Proust"
+  },
+  {
+    "isbn": 2,
+    "title": "Ulysses",
+    "author": "James Joyce"
+  },
+  {
+    "isbn": 3,
+    "title": "Don Quixote",
+    "author": "Miguel de Cervantes"
+  },
+  {
+    "isbn": 4,
+    "title": "Moby Dick",
+    "author": "Herman Melville"
+  },
+  {
+    "isbn": 5,
+    "title": "Hamlet",
+    "author": "William Shakespeare"
+  },
+  {
+    "isbn": 6,
+    "title": "War and Peace",
+    "author": "Leo Tolstoy"
+  }
+]

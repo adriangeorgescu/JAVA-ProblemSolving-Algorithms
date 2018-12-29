@@ -1,30 +1,50 @@
 package com.adrian.dao;
 
 import com.adrian.entity.Book;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+
 
 @Repository
 @Qualifier("simulatedRepository")
+@SuppressWarnings("unchecked")
 public class SimulatedBookRepository implements BookRepositoryInterface {
 
-    private static Map<Integer, Book> books;
+    private Map<Integer, Book> books;
 
-    static {
-        books = new HashMap<Integer, Book>() {
-            {
-                put(1, new Book(1, "In search of Lost Time", "Marcel Proust"));
-                put(2, new Book(2, "Ulysses", "James Joyce"));
-                put(3, new Book(3, "Don Quixote", "Miguel de Cervantes"));
-                put(4, new Book(4, "Moby Dick", "Herman Melville"));
-                put(5, new Book(5, "Hamlet", "William Shakespeare"));
-                put(6, new Book(6, "War and Peace", "Leo Tolstoy"));
+    public SimulatedBookRepository() {
+        this.books = new HashMap<>();
+        JSONParser parser = new JSONParser();
+
+        try {
+            JSONArray books = (JSONArray) parser.parse(new FileReader("src/main/resources/books.json"));
+
+            Iterator<JSONObject> booksIterator = books.iterator();
+
+            while (booksIterator.hasNext()) {
+                JSONObject book = booksIterator.next();
+
+                Integer isbn = Integer.parseInt(book.get("isbn").toString());
+                String title = (String) book.get("title");
+                String author = (String) book.get("author");
+
+                this.books.put(isbn, new Book(isbn, title, author));
             }
-        };
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
