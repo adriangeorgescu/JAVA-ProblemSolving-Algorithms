@@ -1,9 +1,9 @@
 # Java
 Here I'll commit anything related to learning Java: 
 - data structures
-- algorithms like: sorting,
+- algorithms
 - problem solving exercises
-- frameworks: Spring
+- frameworks, ORMs: Spring, Hibernate
 
 
 Cheers!
