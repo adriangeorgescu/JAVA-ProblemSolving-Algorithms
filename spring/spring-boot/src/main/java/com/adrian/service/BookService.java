@@ -2,7 +2,6 @@ package com.adrian.service;
 
 import com.adrian.dao.BookRepositoryInterface;
 import com.adrian.entity.Book;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -11,9 +10,12 @@ import java.util.Collection;
 @Service
 public class BookService {
 
-    @Autowired
-    @Qualifier("simulatedRepository")
+    @Qualifier("MySQL")
     private BookRepositoryInterface bookRepository;
+
+    public BookService(BookRepositoryInterface bookRepository) {
+        this.bookRepository = bookRepository;
+    }
 
     public Collection<Book> getAllBooks() {
         return this.bookRepository.getAllBooks();

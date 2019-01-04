@@ -2,7 +2,6 @@ package com.adrian.controller;
 
 import com.adrian.entity.Book;
 import com.adrian.service.BookService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,8 +11,11 @@ import java.util.Collection;
 @RequestMapping("/books")
 public class BookController {
 
-    @Autowired
     private BookService bookService;
+
+    public BookController(BookService bookService) {
+        this.bookService = bookService;
+    }
 
     @RequestMapping(method = RequestMethod.GET)
     public Collection<Book> getAllBooks() {
