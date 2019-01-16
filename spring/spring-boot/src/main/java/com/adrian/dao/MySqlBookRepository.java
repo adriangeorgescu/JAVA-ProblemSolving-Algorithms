@@ -9,6 +9,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Repository("MySQL")
 public class MySqlBookRepository implements BookRepositoryInterface {
@@ -18,12 +20,15 @@ public class MySqlBookRepository implements BookRepositoryInterface {
     private static class BookRowMapper implements RowMapper<Book> {
         @Override
         public Book mapRow(ResultSet resultSet, int i) throws SQLException {
-            Book book = new Book();
-            book.setId(resultSet.getInt("id"));
-            book.setIsbn(resultSet.getInt("isbn"));
-            book.setTitle(resultSet.getString("title"));
-            book.setAuthor(resultSet.getString("author"));
-            return book;
+            int id = resultSet.getInt("id");
+            UUID isbn = UUID.fromString(resultSet.getString("isbn"));
+            String title = resultSet.getString("title");
+            String author = resultSet.getString("author");
+            String publisher = resultSet.getString("publisher");
+            int revision = resultSet.getInt("revision");
+            String publishedAt = resultSet.getString("published_at");
+
+            return new Book(id, isbn, title, author, publisher, revision, publishedAt);
         }
     }
 
@@ -32,34 +37,39 @@ public class MySqlBookRepository implements BookRepositoryInterface {
     }
 
     @Override
-    public Collection<Book> getAllBooks() {
-        final String sql = "SELECT id, isbn, title, author FROM book";
+    public Collection<Book> getAll() {
+        final String sql = "SELECT id, isbn, title, author, publisher, revision, published_at FROM book";
         List<Book> books = jdbcTemplate.query(sql, new BookRowMapper());
         return books;
     }
 
     @Override
-    public Book getBookByIsbn(int isbn) {
-        final String sql = "SELECT id, isbn, title, author FROM book WHERE isbn = ?";
-        Book book = jdbcTemplate.queryForObject(sql, new BookRowMapper(), isbn);
-        return book;
+    public Optional<Book> get(UUID isbn) {
+        final String sql = "SELECT id, isbn, title, author, publisher, revision, published_at FROM book WHERE isbn = ?";
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, new BookRowMapper(), isbn.toString()));
     }
 
     @Override
-    public void removeBookByIsbn(int isbn) {
+    public boolean remove(UUID isbn) {
         final String sql = "DELETE FROM book WHERE isbn = ?";
-        jdbcTemplate.update(sql, isbn);
+        int result = jdbcTemplate.update(sql, isbn.toString());
+        return result != 0;
     }
 
     @Override
-    public void updateBook(Book book) {
-        final String sql = "UPDATE book SET title = ?, author = ? WHERE isbn = ?";
-        jdbcTemplate.update(sql, new Object[]{book.getTitle(), book.getAuthor(), book.getIsbn()});
+    public boolean update(Book book) {
+        final String sql = "UPDATE book SET title = ?, author = ?, publisher = ?, revision = ?, published_at = ? WHERE isbn = ?";
+        int result = jdbcTemplate.update(sql, new Object[]{book.getTitle(), book.getAuthor(), book.getPublisher(), book.getRevision(), book.getPublishedAt(), book.getIsbn().toString()});
+        return result != 0;
+
     }
 
     @Override
-    public void insertBook(Book book) {
-        final String sql = "INSERT INTO book (isbn, title, author) VALUES (?, ?, ?)";
-        jdbcTemplate.update(sql, new Object[]{book.getIsbn(), book.getTitle(), book.getAuthor()});
+    public UUID insert(Book book) {
+        final String sql = "INSERT INTO book (isbn, title, author, publisher, revision, published_at) VALUES (?, ?, ?, ?, ?, ?)";
+        jdbcTemplate.update(sql, new Object[]{book.getIsbn().toString(), book.getTitle(), book.getAuthor(), book.getPublisher(), book.getRevision(), book.getPublishedAt()});
+
+        return book.getIsbn();
     }
+
 }

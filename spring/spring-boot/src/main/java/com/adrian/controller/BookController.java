@@ -5,10 +5,17 @@ import com.adrian.service.BookService;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.Collection;
+import java.util.Optional;
+import java.util.UUID;
 
 @RestController
-@RequestMapping("/books")
+@RequestMapping(
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        path = "/books"
+)
 public class BookController {
 
     private BookService bookService;
@@ -17,29 +24,29 @@ public class BookController {
         this.bookService = bookService;
     }
 
-    @RequestMapping(method = RequestMethod.GET)
-    public Collection<Book> getAllBooks() {
-        return bookService.getAllBooks();
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public UUID create(@RequestBody Book book) {
+        return bookService.create(book);
     }
 
-    @RequestMapping(value = "/{isbn}", method = RequestMethod.GET)
-    public Book getBookByIsbn(@PathVariable("isbn") int isbn) {
-        return bookService.getBookByIsbn(isbn);
+    @GetMapping
+    public Collection<Book> getAll() {
+        return bookService.getAll();
     }
 
-    @RequestMapping(value = "/{isbn}", method = RequestMethod.DELETE)
-    public void deleteBookByIsbn(@PathVariable("isbn") int isbn) {
-        bookService.removeBookByIsbn(isbn);
+    @GetMapping(value = "/{isbn}")
+    public Optional<Book> get(@NotNull @PathVariable("isbn") UUID isbn) {
+        return bookService.get(isbn);
     }
 
-    @RequestMapping(method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void updateBook(@RequestBody Book book) {
-        bookService.updateBook(book);
+    @PutMapping(value = "/{isbn}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public boolean update(@NotNull @PathVariable("isbn") UUID isbn, @NotNull @Valid @RequestBody Book book) {
+        return bookService.update(book);
     }
 
-    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void insertBook(@RequestBody Book book) {
-        bookService.insertBook(book);
+    @DeleteMapping(value = "/{isbn}")
+    public boolean remove(@NotNull @PathVariable("isbn") UUID isbn) {
+        return bookService.remove(isbn);
     }
 
 }

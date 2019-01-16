@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class BookService {
@@ -17,24 +19,25 @@ public class BookService {
         this.bookRepository = bookRepository;
     }
 
-    public Collection<Book> getAllBooks() {
-        return this.bookRepository.getAllBooks();
+    public UUID create(Book book) {
+        book.setIsbn(UUID.randomUUID());
+        return this.bookRepository.insert(book);
     }
 
-    public Book getBookByIsbn(int isbn) {
-        return this.bookRepository.getBookByIsbn(isbn);
+    public Collection<Book> getAll() {
+        return this.bookRepository.getAll();
     }
 
-    public void removeBookByIsbn(int isbn) {
-        this.bookRepository.removeBookByIsbn(isbn);
+    public Optional<Book> get(UUID isbn) {
+        return this.bookRepository.get(isbn);
     }
 
-    public void updateBook(Book book) {
-        this.bookRepository.updateBook(book);
+    public boolean update(Book book) {
+        return this.bookRepository.update(book);
     }
 
-    public void insertBook(Book book) {
-        this.bookRepository.insertBook(book);
+    public boolean remove(UUID isbn) {
+        return this.bookRepository.remove(isbn);
     }
 
 }

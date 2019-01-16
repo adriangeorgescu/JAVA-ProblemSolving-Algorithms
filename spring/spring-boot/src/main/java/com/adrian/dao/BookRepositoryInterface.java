@@ -3,16 +3,18 @@ package com.adrian.dao;
 import com.adrian.entity.Book;
 
 import java.util.Collection;
+import java.util.Optional;
+import java.util.UUID;
 
 public interface BookRepositoryInterface {
-    Collection<Book> getAllBooks();
+    Collection<Book> getAll();
 
-    Book getBookByIsbn(int isbn);
+    Optional<Book> get(UUID isbn);
 
-    void removeBookByIsbn(int isbn);
+    boolean remove(UUID isbn);
 
-    void updateBook(Book book);
+    boolean update(Book book);
 
-    void insertBook(Book book);
+    UUID insert(Book book);
 
 }
